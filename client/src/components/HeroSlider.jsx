@@ -1,41 +1,55 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SLIDE1 from '../assets/images/slider/slide_1.png'
 import SLIDE2 from '../assets/images/slider/slide_2.png'
 import SLIDE3 from '../assets/images/slider/slide_3.png'
 
 const HeroSlider = () => {
     const [slideIndex, setSlideIndex] = useState(0);
-    const handleChangeSlide = (typeChange) => {
+    const navigate = useNavigate()
+
+    const handleChangeSlide = useCallback((typeChange) => {
         if (typeChange === "left") {
             setSlideIndex(slideIndex > 0 ? slideIndex - 1 : 2);
         } else {
             setSlideIndex(slideIndex < 2 ? slideIndex + 1 : 0);
         }
-    }
+    }, [slideIndex])
+
+    useEffect(() => {
+        const slideAuto = setInterval(() => {
+                handleChangeSlide("right")
+            }, 4500);
+            return () => {
+                clearInterval(slideAuto)
+            }
+    }, [handleChangeSlide])
+
 
     const slideItems = [
     {
       id: 1,
       img: SLIDE1,
       title: "SUMMER SALE",
-      desc: "DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.",
+      desc: "Giảm 50% đồ hè",
       bg: "f5fafd",
     },
     {
       id: 2,
       img: SLIDE2,
       title: "AUTUMN COLLECTION",
-      desc: "DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.",
+      desc: "Đừng bỏ lỡ bộ sưu tập mùa thu 2023",
       bg: "fcf1ed",
     },
     {
       id: 3,
       img: SLIDE3,
-      title: "LOUNGEWEAR LOVE",
-      desc: "DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.",
+      title: "OFFICE COLLECTION",
+      desc: "Hàng hiệu đi làm, thoải mái cả ngày",
       bg: "fbf0f4",
     },
   ];
+
 
   return (
     <div className='w-full h-screen flex relative overflow-hidden'>
@@ -56,13 +70,13 @@ const HeroSlider = () => {
                         className={`w-screen h-screen flex max-md:flex-col items-center`}
                         style={{ backgroundColor: `#${item.bg}` }}
                     >
-                        <div className='h-[70%] md:h-full flex-1 max-md:flex max-md:justify-center max-md:items-center'>
+                        <div className='h-[70%] md:h-full flex-1 flex justify-center items-center'>
                             <img className='h-[80%]' src={item.img} alt="S" />
                         </div>
                         <div className='flex-1 flex flex-col p-5 md:p-12 gap-3'>
                             <h1 className='text-3xl md:text-[58px] leading-[70px] font-medium'>{item.title}</h1>
-                            <p className=''>{item.desc}</p>
-                            <button className='bg-primary hover:bg-white hover:text-[#0056b3] rounded text-white leading-3 uppercase py-5 px-6 max-w-[170px]'>Mua ngay</button>
+                            <p className='uppercase'>{item.desc}</p>
+                            <button onClick={() => navigate('/products')} className='bg-primary hover:bg-white hover:text-[#0056b3] rounded text-white leading-3 uppercase py-5 px-6 max-w-[170px]'>Mua ngay</button>
                         </div>
                     </div>
                 ))

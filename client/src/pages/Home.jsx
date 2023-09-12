@@ -1,3 +1,4 @@
+import PulseLoader from 'react-spinners/PulseLoader'
 import { 
   HeroSlider, 
   PolicyCard, 
@@ -6,9 +7,28 @@ import {
   SectionBody, 
   ProductCard
  } from '../components';
-import { policy, products } from '../constants';
+import { policy } from '../constants';
+import { useGetProductsQuery } from '../app/features/productsApiSlice';
+import { useTitle } from '../hooks';
 
 const Home = () => {
+  useTitle('MSCOMPLEX - Mặc mỗi ngày')
+  const {
+    data: featuredProducts,
+    isLoading: isLoadingFeaturedProducts,
+    isSuccess: isSuccessFeaturedProducts,
+    // isError,
+    // error
+  } = useGetProductsQuery({ tags: ["featured"] }) // get featured product
+
+  const {
+    data: bestSellerProducts,
+    isLoading:isLoadingBestSellerProducts,
+    isSuccess:isSuccessBestSellerProducts,
+    // isError,
+    // error
+  } = useGetProductsQuery({ tags: ["best-seller"] }) // get featured product
+
   return (
     <>
         <HeroSlider />
@@ -19,15 +39,10 @@ const Home = () => {
               Sản phẩm nổi bật
           </SectionTitle>
           <SectionBody>
+            { isLoadingFeaturedProducts && <PulseLoader color={"#ff5353"} /> }
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5'>
               {
-                products.map(product => <ProductCard 
-                  key={product.id}
-                  img1={product.image01}
-                  title={product.title}
-                  price={product.price}
-                  slug={product.slug}
-                />)
+               isSuccessFeaturedProducts && featuredProducts.map(product => <ProductCard key={product._id} product={product} />)
               }
             </div>
           </SectionBody>
@@ -57,14 +72,10 @@ const Home = () => {
               Top sản phẩm bán chạy
           </SectionTitle>
           <SectionBody>
+            { isLoadingBestSellerProducts && <PulseLoader color={"#ff5353"} /> }
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5'>
               {
-                products.map(product => <ProductCard 
-                  key={product.id}
-                  img1={product.image01}
-                  title={product.title}
-                  price={product.price}
-                />)
+                isSuccessBestSellerProducts && bestSellerProducts?.map(product => <ProductCard key={product._id} product={product} />)
               }
             </div>
           </SectionBody>

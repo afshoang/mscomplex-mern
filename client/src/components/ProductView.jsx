@@ -1,21 +1,32 @@
 import { useState } from 'react'
-import { Button } from '../components';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { Button, QuantityBox } from '../components';
+import { addToCart } from '../app/features/cartSlice';
+import { toast } from 'react-toastify';
 
-const ProductView = props => {
-    const product = props.product
+const ProductView = ({ product }) => {
+    const dispatch = useDispatch()
 
-    const [mainImg, setMainImg] = useState(product.image01)
-
+    const [mainImg, setMainImg] = useState(product?.img[0].url)
     const [quantity, setQuantity] = useState(1)
-
     const [color, setColor] = useState(undefined)
     const [size, setSize] = useState(undefined)
 
-    const handleUpdateQuantity = (type) => {
-        if (type === 'plus') {
-            setQuantity(quantity + 1)
-        } else {
-            setQuantity(quantity - 1 < 1 ? 1 : quantity - 1)
+    const navigate = useNavigate()
+
+    const handleAddToCart = (type) => { // type === 0 add to cart, 1 buy now
+        if (!color || !size) {
+            toast.error(`Bạn chưa chọn ${!color ? 'màu sắc' : !size ? 'kích thước' : ''} sản phẩm`)
+            return
+        }
+        dispatch(addToCart({ product, quantity, color, size }))
+        toast("Đã thêm vào giỏ hàng!")
+        if (type === 1) {
+            // buy now => navigate to cart
+            setTimeout(() => {
+                navigate('/cart')
+            }, 300)
         }
     }
 
@@ -28,12 +39,13 @@ const ProductView = props => {
             </div>
 
             <div className='flex items-center gap-3'>
-                <div className='w-1/5 cursor-pointer' onClick={() => setMainImg(product.image01)}>
-                    <img src={product.image01} alt="" />
-                </div>
-                <div className='w-1/5 cursor-pointer' onClick={() => setMainImg(product.image02)}>
-                    <img src={product.image02} alt="" />
-                </div>
+                {
+                    product.img.map((item, index) => (
+                        <div key={index} className='w-1/5 cursor-pointer' onClick={() => setMainImg(item.url)}>
+                            <img src={item.url} alt="" />
+                        </div>
+                    ))
+                }
             </div>
         </div>
         {/* END PRODUCT IMG */}
@@ -41,7 +53,7 @@ const ProductView = props => {
         <div>
             <h1 className='text-4xl'>{product.title}</h1>
             <div className='my-4'>
-                <span className='text-primary text-2xl'>{product.price}</span>
+                <span className='text-primary text-2xl'>{`${new Intl.NumberFormat().format(product.price)}đ`}</span>
             </div>
 
             <div className='mb-5'>
@@ -51,7 +63,7 @@ const ProductView = props => {
 
                 <div className='flex gap-2'>
                     {
-                        product.colors.map(item => <div 
+                        product?.color.map(item => <div 
                             className={`min-w-[50px] leading-10 text-center capitalize px-3 cursor-pointer border border-solid border-transparent
                              ${item === color ? 'bg-primary text-white' : 'bg-[#f6f6f6] text-[#62676D]'} rounded hover:bg-primary hover:text-white duration-200`}
                             onClick={() => setColor(item)}
@@ -70,7 +82,7 @@ const ProductView = props => {
 
                 <div className='flex gap-3'>
                     {
-                        product.size.map(item => <div
+                        product?.size.map(item => <div
                             className={`min-w-[50px] leading-10 text-center capitalize px-3 cursor-pointer border 
                             border-solid border-transparent ${item === size ? 'bg-primary text-white' : 'bg-[#f6f6f6] text-[#62676D]'} rounded hover:bg-primary hover:text-white duration-200`}
                             onClick={() => setSize(item)}
@@ -82,28 +94,11 @@ const ProductView = props => {
                 </div>
             </div>
 
-            {/* #DEDDDD color disabled */}
-            <div className='flex justify-start text-lg leading-9'> 
-                <div 
-                    onClick={() => handleUpdateQuantity('minus')}
-                    className={`flex justify-center items-center w-[40px] h-[40px] rounded-tl 
-                    rounded-bl border border-solid border-[#D9D9D9] ${quantity > 1 ? 'cursor-pointer text-black' : 'cursor-default text-[#DEDDDD]'}`}
-                >
-                    <i className='bx bx-minus'></i>
-                </div>
-                <div className='flex justify-center items-center w-[40px] h-[40px] border border-solid border-[#D9D9D9] leading-4'>
-                    {quantity}
-                </div>
-                <div 
-                onClick={() => handleUpdateQuantity('plus')}
-                className='flex justify-center items-center w-[40px] h-[40px] rounded-tr rounded-br border border-solid border-[#D9D9D9] cursor-pointer'>
-                    <i className='bx bx-plus'></i>
-                </div>
-            </div>
+            <QuantityBox quantity={quantity} setQuantity={setQuantity} />
 
             <div className="flex gap-3 mt-5 text-white">
-                <Button icon='bxs-cart-add' onClick={() => console.log('add to cart')}>thêm vào giỏ</Button>
-                <Button onClick={() => console.log('go to cart')}>mua ngay</Button>
+                <Button icon='bxs-cart-add' onClick={() => handleAddToCart(0)}>thêm vào giỏ</Button>
+                <Button onClick={() => handleAddToCart(1)}>mua ngay</Button>
             </div>
         </div>
         {/* END PRODUCT INFO */}

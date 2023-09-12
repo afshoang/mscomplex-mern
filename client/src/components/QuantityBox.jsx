@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
-const QuantityBox = () => {
-    const [quantity, setQuantity] = useState(1)
+const QuantityBox = ({ quantity, setQuantity }) => { // 2props quantity, handleChangeQuantity
+    // const [quantity, setQuantity] = useState(qty)
 
     const handleUpdateQuantity = (type) => {
         if (type === 'plus') {

@@ -3,6 +3,7 @@ import Button from './Button';
 import Checkbox from './Checkbox';
 import Footer from './Footer';
 import Header from './Header';
+import Layout from './Layout';
 import QuantityBox from './QuantityBox';
 import InfinityList from './InfinityList';
 import HeroSlider from './HeroSlider';
@@ -17,6 +18,7 @@ export {
     Checkbox,
     Footer,
     Header,
+    Layout,
     QuantityBox,
     HeroSlider,
     InfinityList,

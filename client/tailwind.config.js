@@ -15,6 +15,9 @@ export default {
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
         dancing: ['Dancing Script', "cursive"]
+      },
+      backgroundImage: {
+        'login': "url('./src/assets/images/bg.jpg')",
       }
     },
     container: {

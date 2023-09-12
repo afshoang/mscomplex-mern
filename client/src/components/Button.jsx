@@ -1,4 +1,3 @@
-import React from 'react'
 
 const Button = props => {
     const bg = props.backgroundColor ? `bg-[${props.backgroundColor}]` : 'bg-primary'

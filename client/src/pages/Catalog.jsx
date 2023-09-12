@@ -1,51 +1,18 @@
 import { useState, useRef, useEffect } from 'react'
+import PulseLoader from 'react-spinners/PulseLoader'
 
+import { useSearchParams  } from 'react-router-dom';
+import { useGetProductsQuery } from '../app/features/productsApiSlice';
 import { Checkbox, ProductCard } from '../components';
-import { products } from '../constants';
+import { useOutsideAlerter } from '../hooks';
+import { useTitle } from '../hooks';
 
 const Catalog = () => {
-    const category = [
-        {
-            display: "Áo thun",
-            categorySlug: "ao-thun"
-        },
-        {
-            display: "Áo somi",
-            categorySlug: "ao-somi"
-        },
-        {
-            display: "Quần jean",
-            categorySlug: "quan-jean"
-        }
-    ]
+    let [searchParams, setSearchParams] = useSearchParams();
+    const searchQ = searchParams.get("search")
 
-    const colors = [
-    {
-        display: "Trắng",
-        color: "white"
-    },
-    {
-        display: "Hồng",
-        color: "pink"
-    },
-    {
-        display: "Đen",
-        color: "black"
-    },
-    {
-        display: "Vàng",
-        color: "yellow"
-    },
-    {
-        display: "Cam",
-        color: "orange"
-    },
-    {
-        display: "Xanh dương",
-        color: "blue"
-    }
-    ]
-
+    useTitle(`${searchQ ? `${searchQ} - Tìm kiếm` : 'Sản phẩm'}`)
+    
     const initFilter = {
         category: [],
         color: [],
@@ -54,32 +21,62 @@ const Catalog = () => {
 
     const [filter, setFilter] = useState(initFilter)
 
+  const [categories, setCategories] = useState([])
+  const [colors, setColors] = useState([])
+  const [sizes, setSizes] = useState([])
+  const [currPage, setCurrPage] = useState(1);
+
+  const {
+        data: products,
+        isLoading,
+        isSuccess,
+        // isError,
+        // error
+  } = useGetProductsQuery({ categories: filter.category, colors: filter.color, sizes: filter.size, search: searchQ }) // page: currPage || 1, limit: 8 
+
+    useEffect(() => {
+        const allCategories = products?.reduce((curr, prev) => {
+            return curr.concat(prev.categories)
+        }, [])
+        const allColors = products?.reduce((curr, prev) => {
+            return curr.concat(prev.color)
+        }, [])
+        const allSizes = products?.reduce((curr, prev) => {
+            return curr.concat(prev.size)
+        }, [])
+        // setCurrPage(1)
+        setCategories(allCategories)
+        setColors(allColors)
+        setSizes(allSizes)
+    },[products])
+
     const filterSelect = (type, checked, item) => {
         if (checked) {
             switch(type) {
                 case "CATEGORY":
-                    setFilter({...filter, category: [...filter.category, item.categorySlug]})
+                    setFilter({...filter, category: [...filter.category, item]})
                     break
                 case "COLOR":
-                    setFilter({...filter, color: [...filter.color, item.color]})
+                    setFilter({...filter, color: [...filter.color, item]})
                     break
                 case "SIZE":
-                    setFilter({...filter, size: [...filter.size, item.size]})
+                    setFilter({...filter, size: [...filter.size, item.toLowerCase()]})
                     break
                 default:
             }
         } else {
             switch(type) {
                 case "CATEGORY":
-                    const newCategory = filter.category.filter(e => e !== item.categorySlug)
+                    const newCategory = filter.category.filter(e => e.toLowerCase() !== item.toLowerCase())
                     setFilter({...filter, category: newCategory})
                     break
                 case "COLOR":
-                    const newColor = filter.color.filter(e => e !== item.color)
+                    const newColor = filter.color.filter(e => e.toLowerCase() !== item.toLowerCase())
                     setFilter({...filter, color: newColor})
                     break
                 case "SIZE":
-                    const newSize = filter.size.filter(e => e !== item.size)
+                    console.log("????? else");
+                    const newSize = filter.size.filter(e => e.toLowerCase() !== item.toLowerCase())
                     setFilter({...filter, size: newSize})
                     break
                 default:
@@ -87,7 +84,10 @@ const Catalog = () => {
         }
     }
 
-    const clearFilter = () => setFilter(initFilter)
+    const clearFilter = () => {
+        setFilter(initFilter)
+        setCurrPage(1)
+    }
 
     const filterRef = useRef(null)
 
@@ -107,21 +107,21 @@ const Catalog = () => {
             <div className='flex justify-start items-start gap-3'>
                 <aside 
                     ref={filterRef}
-                    className='max-w-[270px] fixed transition-transform duration-300 ease-in 
-                    -translate-x-full top-0 left-0 z-10 bg-white h-full pt-3 pl-3 lg:p-0 lg:static lg:w-1/5 lg:translate-x-0'
+                    className='max-lg:shadow-[0_3px_10px_rgb(0,0,0,0.2)] max-w-[270px] fixed transition-transform duration-300 ease-in 
+                    -translate-x-full top-0 left-0 z-10 bg-white h-full pt-3 px-3 lg:p-0 lg:static lg:w-1/5 lg:translate-x-0'
                 >
                     <div>
                         <div className='text-md font-bold mb-5 capitalize'>Danh mục sản phẩm</div>
                         <div className='flex flex-wrap gap-2 w-full'>
                             {
-                                category.map((item, index) => <div
+                               categories && [...new Set(categories)].map((item, index) => <div
                                     key={index}
                                     className='mb-3'
                                 >
                                     <Checkbox
-                                        label={item.display}
+                                        label={item}
                                         onChange={(input) => filterSelect("CATEGORY", input.checked, item)}
-                                        checked={filter.category.includes(item.categorySlug)}
+                                        checked={filter.category.includes(item)}
                                     />
                                     
                                 </div>)
@@ -133,14 +133,33 @@ const Catalog = () => {
                         <div className='text-md font-bold mb-5 capitalize'>màu sắc</div>
                         <div className='flex flex-wrap gap-2 w-full'>
                             {
-                                colors.map((item, index) => <div
+                                colors && [ ...new Set(colors)].map((item, index) => <div
                                     key={index}
                                     className='mb-3'
                                 >
                                     <Checkbox 
-                                        label={item.display}
+                                        label={item}
                                         onChange={(input) => filterSelect("COLOR", input.checked, item)}
-                                        checked={filter.color.includes(item.color)}
+                                        checked={filter.color.includes(item)}
+                                    />
+                                    
+                                </div>)
+                            }
+                        </div>
+                    </div>
+
+                    <div className='mt-5'>
+                        <div className='text-md font-bold mb-5 capitalize'>Kích thước</div>
+                        <div className='flex flex-wrap gap-2 w-full'>
+                            {
+                                sizes && [... new Set(sizes)].map((item, index) => <div
+                                    key={index}
+                                    className='mb-3'
+                                >
+                                    <Checkbox 
+                                        label={item}
+                                        onChange={(input) => filterSelect("SIZE", input.checked, item)}
+                                        checked={filter.size.includes(item)}
                                     />
                                     
                                 </div>)
@@ -155,41 +174,16 @@ const Catalog = () => {
                         >Xóa bộ lọc</button>
                     </div>
                 </aside>
-                
-                <div className='flex-1 lg:w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5'>
+                { isLoading && <PulseLoader color={"#ff5353"} /> }
+                <div className='flex-1 lg:w-full grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5'>
                     {
-                        products.map(product => <ProductCard 
-                            key={product.id}
-                            img1={product.image01}
-                            title={product.title}
-                            price={product.price}
-                            slug={product.slug}
-                        />)
+                        isSuccess && products.map(product => <ProductCard key={product._id} product={product} />)
                     }
                 </div>
             </div>
         </div>
     </div>
   )
-}
-
-function useOutsideAlerter(ref) {
-  useEffect(() => {
-    /**
-     * Alert if clicked on outside of element
-     */
-    function handleClickOutside(event) {
-      if (ref.current && ref.current.classList.contains('active') && !ref.current.contains(event.target)) {
-        ref.current.classList.remove('active')
-      }
-    }
-    // Bind the event listener
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      // Unbind the event listener on clean up
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [ref]);
 }
 
 export default Catalog

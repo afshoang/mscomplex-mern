@@ -3,29 +3,47 @@ import {
   Route,
   Routes,
 } from "react-router-dom";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import {
     Cart, 
     Catalog,
+    Checkout,
     Home,
-    Product
+    Login,
+    OrderDetail,
+    Orders,
+    Product,
+    Register
  } from './pages';
-import { Announcement, Header, Footer } from './components';
+import { Layout } from './components';
+import { PrivateRoutes } from './routes';
 
 function App() {
   return (
-     <BrowserRouter>
-      <Announcement />
-      <Header />
-      <main>
+    <BrowserRouter>
+        <ToastContainer />
         <Routes>
-          <Route path='/' exact element={<Home />} />
-          <Route path='/catalog' element={<Catalog />} />
-          <Route path='/catalog/:slug' element={<Product />} />
-          <Route path='/cart' element={<Cart />} />
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path='login' element={<Login />} />
+            <Route path='register' element={<Register />} />
+
+            <Route path='products' element={<Catalog />} />
+            <Route path='products/:id' element={<Product />} />
+            <Route path='cart' element={<Cart />} />
+
+            <Route element={<PrivateRoutes />}>
+              <Route path='my-orders' element={<Orders />} />
+              <Route path='my-orders/:id' element={<OrderDetail />} />
+            </Route>
+          </Route>
+
+          <Route element={<PrivateRoutes />}>
+            <Route path='/checkout' element={<Checkout />} />
+          </Route>
         </Routes>
-      </main>
-      <Footer />
     </BrowserRouter>
   )
 }

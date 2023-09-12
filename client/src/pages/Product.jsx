@@ -1,5 +1,3 @@
-import React from 'react'
-import { products } from '../constants';
 import { 
   ProductCard,
   ProductView,
@@ -8,35 +6,37 @@ import {
   SectionBody, 
  } from '../components';
  import { useParams } from 'react-router-dom';
+ import { useGetProductQuery } from '../app/features/productsApiSlice';
+ import { useTitle } from '../hooks';
 
 const Product = () => {
-  const { slug } = useParams()
-  console.log("🚀 ~ file: Product.jsx:13 ~ Product ~ slug:", slug)
-   const product = products.find(product => product.slug === slug)
+  const { id } = useParams()
+  const {
+    data: product,
+    isLoading,
+    isSuccess,
+    isError,
+    error
+  } = useGetProductQuery(id)
+  useTitle(`${product?.title}`)
+
 
   return (
     <div className='container px-4'>
       <Section>
         <SectionBody>
-          <ProductView product={product} />
+          { isSuccess && <ProductView product={product} /> }
         </SectionBody>
       </Section>
-      <Section>
+      {/* <Section>
         <SectionTitle>Khám phá thêm</SectionTitle>
         <SectionBody>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5'>
               {
-                products.map(product => <ProductCard 
-                  key={product.id}
-                  img1={product.image01}
-                  title={product.title}
-                  price={product.price}
-                  slug={product.slug}
-                />)
               }
             </div>
           </SectionBody>
-      </Section>
+      </Section> */}
     </div>
   )
 }
