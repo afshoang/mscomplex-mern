@@ -17,7 +17,7 @@ export default {
         dancing: ['Dancing Script', "cursive"]
       },
       backgroundImage: {
-        'login': "url('./src/assets/images/bg.jpg')",
+        'login': "url('/bg.jpg')",
       }
     },
     container: {
