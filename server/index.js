@@ -5,7 +5,7 @@ require('dotenv').config()
 
 const { authRoute, userRoute, orderRoute, productRoute, uploadRoute } = require('./routes');
 const connectDB = require('./config/db')
-const { errorHandler } = require('./middlewares/errorHandler')
+const { errorHandler, notFound } = require('./middlewares/errorHandler')
 
 const app = express()
 
@@ -21,6 +21,7 @@ app.use("/api/products", productRoute)
 app.use("/api/users", userRoute)
 app.use("/api/upload", uploadRoute)
 
+app.use(notFound);
 app.use(errorHandler);
 
 app.listen(process.env.PORT || 5000, () => {
