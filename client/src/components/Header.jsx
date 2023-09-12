@@ -30,7 +30,7 @@ const Header = () => {
     <header>
         <div className='container'>
             <nav className='flex relative justify-between items-center py-4 lg:py-0 px-3'>
-                <Link to="/"><h1 className='font-bold text-2xl'>MRCOMPLEX<span className='text-primary'>.</span></h1></Link>
+                <Link to="/"><h1 className='font-bold text-2xl'>MSCOMPLEX<span className='text-primary'>.</span></h1></Link>
 
                 {/* nav link destop */}
                 <ul className='hidden lg:flex justify-between items-center text-sm font-medium'>

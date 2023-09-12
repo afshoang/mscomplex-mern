@@ -85,7 +85,7 @@ const Checkout = () => {
   return (
     <div className='container py-5 px-3'>
       <header className='hidden lg:flex justify-center pb-3'>
-        <Link to="/"><h1 className='font-bold text-2xl'>MRCOMPLEX<span className='text-primary'>.</span></h1></Link>
+        <Link to="/"><h1 className='font-bold text-2xl'>MSCOMPLEX<span className='text-primary'>.</span></h1></Link>
       </header>
       <div className='flex flex-col-reverse lg:flex-row lg:h-screen lg:gap-10'>
         <main className='flex-[2] bg-gray pt-10 lg:pt-0'>

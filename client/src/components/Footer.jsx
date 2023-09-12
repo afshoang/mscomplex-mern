@@ -56,7 +56,7 @@ const footerCustomerLinks = [
                     </div>
                 </div>
                 <div>
-                    <h4 className="uppercase mb-6 font-bold">Về MRCOMPLEX</h4>
+                    <h4 className="uppercase mb-6 font-bold">Về MSCOMPLEX</h4>
                     <div>
                         {
                             footerAboutLinks.map((item, index) => (
@@ -84,9 +84,9 @@ const footerCustomerLinks = [
                     </div>
                 </div>
                 <div>
-                    <a href="#"><h1 className='font-bold text-2xl mb-6'>MRCOMPLEX<span className='text-primary'>.</span></h1></a>
+                    <a href="#"><h1 className='font-bold text-2xl mb-6'>MSCOMPLEX<span className='text-primary'>.</span></h1></a>
                     <p>
-                        Hướng đến mục tiêu mang lại niềm vui ăn mặc mới mỗi ngày cho hàng triệu người tiêu dùng Việt. Hãy cùng MrComplex hướng đến một cuộc sống năng động, tích cực hơn.
+                        Hướng đến mục tiêu mang lại niềm vui ăn mặc mới mỗi ngày cho hàng triệu người tiêu dùng Việt. Hãy cùng MsComplex hướng đến một cuộc sống năng động, tích cực hơn.
                     </p>
                 </div>
             </div>
