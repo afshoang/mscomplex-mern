@@ -32,12 +32,12 @@ const login = asyncHandler(async (req, res) => {
         username
     })
     // not found user
-    if (!foundUser) res.json("Username hoặc password không hợp lệ!")
+    if (!foundUser) throw new Error("Username hoặc password không hợp lệ!");
 
     // decrypt password
     const decryptedPassword = CryptoJS.AES.decrypt(foundUser.password, process.env.SECRET_KEY).toString(CryptoJS.enc.Utf8);
 
-    if (decryptedPassword !== password) res.json("Wrong credential")
+    if (decryptedPassword !== password) throw new Error("Mật khẩu không hợp lệ");
 
     const accessToken = jwt.sign({
         id: foundUser._id,

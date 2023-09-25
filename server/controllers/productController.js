@@ -82,7 +82,9 @@ const updateProduct = asyncHandler(async (req, res) => {
     if (req.body.title) {
         req.body.slug = slugify(req.body.title);
     }
-    const updatedProduct = await Product.findByIdAndUpdate(req.params.id, {
+    console.log("req.params.id", req.params.id);
+    console.log("req.body", req.body);
+    const updatedProduct = await Product.findByIdAndUpdate({ _id: req.params.id }, {
         $set: req.body
     }, { new: true })
     res.json(updatedProduct)
@@ -92,7 +94,7 @@ const updateProduct = asyncHandler(async (req, res) => {
 // @route DEL /api/products/:id
 // @access Private/Admin
 const deleteProduct = asyncHandler(async (req, res) => {
-    const deleteProduct = await Product.findOneAndDelete(req.params.id);
+    const deleteProduct = await Product.findOneAndDelete({ _id: req.params.id });
     res.json(deleteProduct);
 })
 

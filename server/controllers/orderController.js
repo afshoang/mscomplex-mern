@@ -46,7 +46,7 @@ const getOrders = asyncHandler(async (req, res) => {
 // @access Private
 const getAllOrders = asyncHandler(async (req, res) => {
     const orders = await Order.find()
-        .populate("products.product")
+        .populate("orderItems.product")
         .populate("userId")
         .exec();
     res.json(orders)

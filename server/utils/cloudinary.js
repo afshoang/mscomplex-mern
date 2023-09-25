@@ -1,4 +1,3 @@
-// import { v2 as cloudinary } from 'cloudinary';
 const cloudinary = require('cloudinary');
 
 cloudinary.config({
@@ -13,7 +12,7 @@ const cloudinaryUploadImg = async (fileToUploads) => {
             resolve(
                 {
                     url: result.secure_url,
-                    asset_id: result.asset_id,
+                    // asset_id: result.asset_id,
                     public_id: result.public_id,
                 },
                 {
