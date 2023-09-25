@@ -1,5 +1,4 @@
 import AddProduct from './AddProduct';
-import Category from './Category';
 import Customer from './Customer';
 import DashBoard from './DashBoard';
 import Login from './Login';
@@ -8,7 +7,6 @@ import OrderList from './OrderList';
 
 export {
     AddProduct,
-    Category,
     Customer,
     DashBoard,
     Login,

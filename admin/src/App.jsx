@@ -1,7 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import {
   AddProduct,
-  Category,
   Customer,
   DashBoard,
   Login,
