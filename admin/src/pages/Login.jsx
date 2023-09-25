@@ -111,9 +111,9 @@ const Login = () => {
                     </button>
                 </form>
 
-                <div className="mt-5">
+                {/* <div className="mt-5">
                     <span>Bạn chưa có tài khoản?</span><Link className="text-primary font-bold ml-1 hover:underline" to="/register">Đăng ký ngay</Link>
-                </div>
+                </div> */}
             </div>
         </div>
     </div>

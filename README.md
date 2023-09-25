@@ -9,6 +9,14 @@ An ecommerce store built with MERN stack
 
 _Live demo <https://mscomplex.onrender.com/>_
 
+_Live demo admin <https://admin-mscomplex.onrender.com/>_
+
+```
+Admin account:
+admin
+123456
+```
+
 ## Usage
 
 - Create a MongoDB database and obtain your `MongoDB URI` - [MongoDB Atlas](https://www.mongodb.com/cloud/atlas/register)
